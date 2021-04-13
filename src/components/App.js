@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import Web3 from 'web3';
 import DaiToken from '../abis/DaiToken.json';
+import DappToken from '../abis/DappToken.json';
+import TokenFarm from '../abis/TokenFarm.json';
 import Navbar from './Navbar'
 import './App.css'
 
@@ -20,7 +22,7 @@ class App extends Component {
     const networkId = await web3.eth.net.getId();
     console.log("network id:" + networkId);
 
-    // Load DaiToken
+    // Load DaiToken (token is deposited)
     const daiTokenData = DaiToken.networks[networkId];
 
     if (daiTokenData) {
@@ -29,9 +31,26 @@ class App extends Component {
       
       let daiTokenBalance = await daiToken.methods.balanceOf(this.state.account).call();
       this.setState({ daiTokenBalance: daiTokenBalance.toString() });
+      console.log({balance: daiTokenBalance.toString()})
     } else {
       window.alert('DaiToken contract not deployed to detected network.');
     }
+
+    // Load DappToken (token is earned)
+    const dappTokenData = DappToken.networks[networkId];
+
+    if (dappTokenData) {
+      const dappToken = new web3.eth.Contract(DappToken.abi, dappTokenData.address);
+      this.setState({ dappToken });
+          
+      let dappTokenBalance = await dappToken.methods.balanceOf(this.state.account).call();
+      this.setState({ dappTokenBalance: dappTokenBalance.toString() });
+      console.log({balance: dappTokenBalance.toString()})
+    } else {
+      window.alert('DappToken contract not deployed to detected network.');
+    }
+
+
   }
 
   async loadWeb3() {
