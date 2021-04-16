@@ -59,9 +59,7 @@ class App extends Component {
     } else {
       window.alert('TokenFarm contract not deployed to detected network.');
     }
-
     this.setState({ loading: false });
-
   }
 
   async loadWeb3() {
@@ -96,7 +94,12 @@ class App extends Component {
     if(this.state.loading) {
       content = <p id="loader" className="text-center">Loading...</p>
     } else {
-      content = <Main/>
+      content =
+       <Main
+      daiTokenBalance={this.state.daiTokenBalance}
+      dappTokenBalance={this.state.dappTokenBalance}
+      stakingBalance={this.state.stakingBalance}
+      />
     }
     
     return (
